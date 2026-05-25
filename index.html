@@ -34,6 +34,8 @@ const LIFF_ID =
 const GAS_URL =
   "ここにGAS_URL";
 
+let userProfile = null;
+
 async function main() {
 
   try {
@@ -43,26 +45,21 @@ async function main() {
     });
 
     if (!liff.isLoggedIn()) {
-
       liff.login();
-
       return;
     }
 
-    const profile =
-      await liff.getProfile();
+    userProfile = await liff.getProfile();
 
-    document
-      .getElementById("status")
-      .innerText =
-        `こんにちは ${profile.displayName}`;
+    document.getElementById("status").innerHTML = `
+      こんにちは ${userProfile.displayName}<br>
+      LINE ID: ${userProfile.userId}
+    `;
 
   } catch(err) {
 
-    document
-      .getElementById("status")
-      .innerText =
-        err.message;
+    document.getElementById("status").innerText =
+      err.message;
   }
 }
 
@@ -72,51 +69,32 @@ async function submitForm() {
 
   try {
 
-    const profile =
-      await liff.getProfile();
-
     const payload = {
 
-      name:
-        document
-          .getElementById("name")
-          .value,
+      name: document.getElementById("name").value,
 
-      line_user_id:
-        profile.userId,
+      line_user_id: userProfile.userId,
 
-      display_name:
-        profile.displayName
+      display_name: userProfile.displayName
     };
 
-    await fetch(
-      GAS_URL,
-      {
-        method: "POST",
+    await fetch(GAS_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
 
-        headers: {
-          "Content-Type":
-            "application/json"
-        },
-
-        body:
-          JSON.stringify(payload)
-      }
-    );
-
-    document
-      .getElementById("status")
-      .innerText =
-        "登録完了";
+    document.getElementById("status").innerText =
+      "登録完了";
 
     liff.closeWindow();
 
   } catch(err) {
 
-    document
-      .getElementById("status")
-      .innerText =
-        err.message;
+    document.getElementById("status").innerText =
+      err.message;
   }
 }
 
