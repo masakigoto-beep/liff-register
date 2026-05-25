@@ -32,7 +32,7 @@ const LIFF_ID =
   "2010188905-GwlRifFS";
 
 const GAS_URL =
-  "https://script.google.com/macros/s/AKfycbyJBIBaZvcpxIiYbGJc82I4ScUEuPNG64h6olll5-X5kno_7ojBOPNPoKhV6FWBQFEbPA/exec";
+  "https://script.google.com/macros/s/AKfycbzO0TockZPPozDTpKCoOKPOuLAvpfnEUML0Gjm7gn4Zkk0OPwIPT5E9nbJRGLARQGAmAA/exec";
 
 let userProfile = null;
 
@@ -80,6 +80,7 @@ async function submitForm() {
 
     await fetch(GAS_URL, {
       method: "POST",
+      mode: "no-cors", // ← 追加
       headers: {
         "Content-Type": "application/json"
       },
